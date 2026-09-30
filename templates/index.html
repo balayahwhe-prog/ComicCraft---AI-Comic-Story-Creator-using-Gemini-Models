@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ComicCraft AI</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #312e81,
+                    #581c87
+                );
+
+            color: white;
+
+            padding: 30px;
+        }
+
+
+        .container {
+
+            max-width: 1000px;
+
+            margin: auto;
+        }
+
+
+        header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        header h1 {
+
+            font-size: 42px;
+
+            margin-bottom: 8px;
+        }
+
+
+        header p {
+
+            color: #d1d5db;
+
+            font-size: 17px;
+        }
+
+
+        .card {
+
+            background:
+                rgba(255,255,255,0.10);
+
+            backdrop-filter: blur(12px);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.15);
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0,0,0,0.25);
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 10px;
+
+            font-weight: bold;
+        }
+
+
+        textarea {
+
+            width: 100%;
+
+            min-height: 130px;
+
+            resize: vertical;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            border: none;
+
+            outline: none;
+
+            font-size: 16px;
+
+            color: #111827;
+        }
+
+
+        .options {
+
+            display: flex;
+
+            gap: 20px;
+
+            margin-top: 18px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .option-box {
+
+            flex: 1;
+
+            min-width: 200px;
+        }
+
+
+        select {
+
+            width: 100%;
+
+            padding: 12px 15px;
+
+            border-radius: 10px;
+
+            border: none;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 20px;
+
+            flex-wrap: wrap;
+        }
+
+
+        button {
+
+            border: none;
+
+            border-radius: 10px;
+
+            padding: 13px 20px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+            opacity: 0.9;
+        }
+
+
+        .generate-btn {
+
+            background: #f59e0b;
+
+            color: #111827;
+        }
+
+
+        .again-btn {
+
+            background: #22c55e;
+
+            color: white;
+        }
+
+
+        .clear-btn {
+
+            background: #ef4444;
+
+            color: white;
+        }
+
+
+        .examples {
+
+            margin-top: 25px;
+        }
+
+
+        .examples h3 {
+
+            margin-bottom: 12px;
+        }
+
+
+        .example-buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .example-buttons button {
+
+            background:
+                rgba(255,255,255,0.15);
+
+            color: white;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.2);
+        }
+
+
+        .result-section {
+
+            display: none;
+        }
+
+
+        .result-title {
+
+            font-size: 25px;
+
+            margin-bottom: 15px;
+        }
+
+
+        #storyResult {
+
+            background:
+                rgba(0,0,0,0.25);
+
+            padding: 20px;
+
+            border-radius: 15px;
+
+            line-height: 1.7;
+
+            white-space: pre-wrap;
+        }
+
+
+        #imageResult {
+
+            margin-top: 20px;
+
+            text-align: center;
+        }
+
+
+        #imageResult img {
+
+            max-width: 100%;
+
+            width: auto;
+
+            max-height: 700px;
+
+            border-radius: 15px;
+
+            margin-top: 10px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.35);
+        }
+
+
+        .loading {
+
+            display: none;
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            font-size: 18px;
+        }
+
+
+        .error {
+
+            background:
+                rgba(239,68,68,0.2);
+
+            border:
+                1px solid #ef4444;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-top: 15px;
+
+            display: none;
+
+            white-space: pre-wrap;
+        }
+
+
+        footer {
+
+            text-align: center;
+
+            margin-top: 30px;
+
+            color: #cbd5e1;
+        }
+
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+
+            header h1 {
+
+                font-size: 32px;
+            }
+
+
+            .card {
+
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <h1>
+            🎨 ComicCraft AI
+        </h1>
+
+        <p>
+            AI Powered Comic Story Creator
+        </p>
+
+    </header>
+
+
+
+    <!-- ================= INPUT ================= -->
+
+    <div class="card">
+
+
+        <label for="prompt">
+
+            ✍️ Your Comic Idea
+
+        </label>
+
+
+        <textarea
+            id="prompt"
+            placeholder="Enter your comic idea here..."
+        ></textarea>
+
+
+
+        <!-- ================= OPTIONS ================= -->
+
+        <div class="options">
+
+
+            <div class="option-box">
+
+                <label for="provider">
+
+                    🤖 AI Provider
+
+                </label>
+
+
+                <select id="provider">
+
+                    <option value="gemini">
+
+                        Gemini
+
+                    </option>
+
+
+                    <option value="huggingface">
+
+                        Hugging Face
+
+                    </option>
+
+
+                    <option value="pollinations">
+                        
+                        Pollinations
+                    
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="option-box">
+
+                <label for="type">
+
+                    📌 Generation Type
+
+                </label>
+
+
+                <select id="type">
+
+                    <option value="text">
+
+                        Story
+
+                    </option>
+
+
+                    <option value="image">
+
+                        Image
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================= BUTTONS ================= -->
+
+        <div class="buttons">
+
+
+            <button
+                class="generate-btn"
+                onclick="generateContent()"
+            >
+
+                ✨ Generate
+
+            </button>
+
+
+
+            <button
+                class="again-btn"
+                onclick="generateContent()"
+            >
+
+                🔄 Generate Again
+
+            </button>
+
+
+
+            <button
+                class="clear-btn"
+                onclick="clearAll()"
+            >
+
+                🗑️ Clear
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- ================= EXAMPLES ================= -->
+
+        <div class="examples">
+
+
+            <h3>
+
+                💡 Example Prompts
+
+            </h3>
+
+
+            <div class="example-buttons">
+
+
+                <button
+                    onclick="usePrompt(
+                        'A college student learns Python with the help of an AI assistant and creates her first successful AI project.'
+                    )"
+                >
+
+                    🧑‍💻 Student & AI
+
+                </button>
+
+
+
+                <button
+                    onclick="usePrompt(
+                        'A college student discovers a friendly magical robot that helps her solve a difficult problem.'
+                    )"
+                >
+
+                    🤖 Magical Robot
+
+                </button>
+
+
+
+                <button
+                    onclick="usePrompt(
+                        'Two college friends build an AI startup and present their idea at a college competition.'
+                    )"
+                >
+
+                    🚀 Startup
+
+                </button>
+
+
+
+                <button
+                    onclick="usePrompt(
+                        'A young student uses technology and teamwork to save her city from a major problem.'
+                    )"
+                >
+
+                    🦸 Superhero
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= LOADING ================= -->
+
+    <div
+        class="loading"
+        id="loading"
+    >
+
+        ⏳ Generating your comic...
+
+    </div>
+
+
+
+    <!-- ================= ERROR ================= -->
+
+    <div
+        class="error"
+        id="error"
+    ></div>
+
+
+
+    <!-- ================= RESULT ================= -->
+
+    <div
+        class="card result-section"
+        id="resultSection"
+    >
+
+
+        <h2 class="result-title">
+
+            📖 Generated Result
+
+        </h2>
+
+
+
+        <div id="storyResult">
+
+            Your generated result will appear here.
+
+        </div>
+
+
+
+        <div id="imageResult"></div>
+
+
+    </div>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        ✨ ComicCraft AI — Powered by AI
+
+    </footer>
+
+
+</div>
+
+
+
+<script>
+
+
+// ======================================================
+// BACKEND URL
+// ======================================================
+
+const BACKEND_URL =
+    "http://127.0.0.1:8000";
+
+
+
+// ======================================================
+// EXAMPLE PROMPT
+// ======================================================
+
+function usePrompt(text) {
+
+    document.getElementById("prompt").value = text;
+
+}
+
+
+
+// ======================================================
+// GENERATE CONTENT
+// ======================================================
+
+async function generateContent() {
+
+
+    const prompt =
+        document
+        .getElementById("prompt")
+        .value
+        .trim();
+
+
+    const provider =
+        document
+        .getElementById("provider")
+        .value;
+
+
+    const type =
+        document
+        .getElementById("type")
+        .value;
+
+
+
+    // Check prompt
+
+    if (!prompt) {
+
+        showError(
+            "Please enter a comic idea first."
+        );
+
+        return;
+    }
+
+
+
+    // Elements
+
+    const loading =
+        document.getElementById("loading");
+
+
+    const error =
+        document.getElementById("error");
+
+
+    const resultSection =
+        document.getElementById("resultSection");
+
+
+    const storyResult =
+        document.getElementById("storyResult");
+
+
+    const imageResult =
+        document.getElementById("imageResult");
+
+
+
+    // Reset
+
+    error.style.display = "none";
+
+    resultSection.style.display = "block";
+
+    loading.style.display = "block";
+
+    storyResult.innerHTML =
+        "Generating...";
+
+    imageResult.innerHTML = "";
+
+
+
+    try {
+
+
+        // ==================================================
+        // IMAGE GENERATION
+        // ==================================================
+
+        if (type === "image") {
+
+
+            const response =
+                await fetch(
+                    BACKEND_URL + "/generate-image",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "image/png"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            prompt: prompt,
+
+                            provider: provider,
+
+                            type: "image"
+
+                        })
+
+                    }
+                );
+
+
+
+            // Check response
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                throw new Error(
+                    errorText
+                );
+            }
+
+
+
+            // Get image bytes
+
+            const imageBlob =
+                await response.blob();
+
+
+
+            // Create browser URL
+
+            const imageURL =
+                URL.createObjectURL(
+                    imageBlob
+                );
+
+
+
+            // Show message
+
+            storyResult.innerHTML =
+                "🖼️ Your comic image is ready!";
+
+
+
+            // Show image
+
+            imageResult.innerHTML = `
+
+                <img
+                    src="${imageURL}"
+                    alt="Generated Comic Image"
+                >
+
+            `;
+
+
+        }
+
+
+        // ==================================================
+        // STORY GENERATION
+        // ==================================================
+
+        else {
+
+
+            const response =
+                await fetch(
+                    BACKEND_URL + "/generate",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            prompt: prompt,
+
+                            provider: provider,
+
+                            type: "text"
+
+                        })
+
+                    }
+                );
+
+
+
+            // Check response
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                throw new Error(
+                    errorText
+                );
+            }
+
+
+
+            // JSON response
+
+            const data =
+                await response.json();
+
+
+
+            // Show story
+
+            storyResult.innerHTML =
+                formatResult(data);
+
+
+        }
+
+
+    }
+
+
+    catch (err) {
+
+
+        console.error(err);
+
+
+        showError(
+
+            "❌ Generation failed.\n\n" +
+
+            err.message +
+
+            "\n\n" +
+
+            "Please make sure the FastAPI server is running."
+
+        );
+
+    }
+
+
+    finally {
+
+        loading.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+// ======================================================
+// FORMAT STORY RESULT
+// ======================================================
+
+function formatResult(data) {
+
+
+    if (typeof data === "string") {
+
+        return escapeHTML(data);
+
+    }
+
+
+    if (data.result) {
+
+        return escapeHTML(
+            data.result
+        );
+
+    }
+
+
+    if (data.text) {
+
+        return escapeHTML(
+            data.text
+        );
+
+    }
+
+
+    if (data.story) {
+
+        return escapeHTML(
+            data.story
+        );
+
+    }
+
+
+    if (data.message) {
+
+        return escapeHTML(
+            data.message
+        );
+
+    }
+
+
+    return escapeHTML(
+        JSON.stringify(
+            data,
+            null,
+            2
+        )
+    );
+
+}
+
+
+
+// ======================================================
+// ESCAPE HTML
+// ======================================================
+
+function escapeHTML(text) {
+
+    return String(text)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        )
+
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+
+}
+
+
+
+// ======================================================
+// SHOW ERROR
+// ======================================================
+
+function showError(message) {
+
+
+    const error =
+        document.getElementById(
+            "error"
+        );
+
+
+    error.innerHTML =
+        escapeHTML(message);
+
+
+    error.style.display =
+        "block";
+
+}
+
+
+
+// ======================================================
+// CLEAR
+// ======================================================
+
+function clearAll() {
+
+
+    document.getElementById(
+        "prompt"
+    ).value = "";
+
+
+    document.getElementById(
+        "storyResult"
+    ).innerHTML =
+        "Your generated result will appear here.";
+
+
+    document.getElementById(
+        "imageResult"
+    ).innerHTML = "";
+
+
+    document.getElementById(
+        "resultSection"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "error"
+    ).style.display =
+        "none";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
